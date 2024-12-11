@@ -4,7 +4,9 @@
   "description": "Clone do https://www.tabnews.com.br/ para o https://curso.dev/",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev"    
+    "dev": "next dev",
+    "lint:check": "prettier --check .",
+    "lint:fix": "prettier --write ."
   },
   "author": "",
   "license": "MIT",
@@ -15,5 +17,8 @@
   },
   "engines": {
     "node": "18.20.5"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2"
   }
 }
