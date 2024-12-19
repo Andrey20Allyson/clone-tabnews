@@ -36,5 +36,6 @@ test("GET to /api/v1/status should return the API Status", async () => {
   expect(databaseService.database_max_connections).toBeInt();
   expect(databaseService.database_opened_connections).toBeInt();
 
+  expect(databaseService.database_version).toBe("16.0");
   expect(databaseService.database_opened_connections).toBe(1);
 });
