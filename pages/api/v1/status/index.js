@@ -5,12 +5,13 @@ export default async function status(request, response) {
 
   const databaseServiceStatusUpdatedAt = new Date().toISOString();
 
-  const databaseConnectionInfoQueryResult = await database.query(
-    `select 'PostgreSQL' as dbms_name, * from
-      (select setting AS server_version from pg_settings where name = 'server_version') q1,
-      (select count(*)::int AS opened_connections from pg_stat_activity) q2,
-      (select setting::int AS max_connections from pg_settings where name = 'max_connections') q3;`
-  );
+  const databaseConnectionInfoQueryResult = await database.query({
+    text: `SELECT 'PostgreSQL' AS dbms_name, * FROM
+      (SELECT setting AS server_version FROM pg_settings WHERE name = 'server_version') q1,
+      (SELECT count(*)::int AS opened_connections FROM pg_stat_activity WHERE datname = $1) q2,
+      (SELECT setting::int AS max_connections FROM pg_settings WHERE name = 'max_connections') q3;`,
+    values: [process.env.POSTGRES_DB],
+  });
 
   const databaseInfo = databaseConnectionInfoQueryResult.rows[0];
 
