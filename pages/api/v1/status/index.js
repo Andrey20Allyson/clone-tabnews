@@ -3,20 +3,19 @@ import database from "infra/database.js";
 export default async function status(request, response) {
   const updatedAt = new Date().toISOString();
 
-  const databaseServiceStatusUpdatedAt = new Date().toISOString();
-
   const databaseConnectionInfoQueryResult = await database.query({
     text: `SELECT 'PostgreSQL' AS dbms_name, * FROM
-      (SELECT setting AS server_version FROM pg_settings WHERE name = 'server_version') q1,
-      (SELECT count(*)::int AS opened_connections FROM pg_stat_activity WHERE datname = $1) q2,
-      (SELECT setting::int AS max_connections FROM pg_settings WHERE name = 'max_connections') q3;`,
+    (SELECT setting AS server_version FROM pg_settings WHERE name = 'server_version') q1,
+    (SELECT count(*)::int AS opened_connections FROM pg_stat_activity WHERE datname = $1) q2,
+    (SELECT setting::int AS max_connections FROM pg_settings WHERE name = 'max_connections') q3,
+    (SELECT CURRENT_TIMESTAMP AS database_timestamp) q4;`,
     values: [process.env.POSTGRES_DB],
   });
 
   const databaseInfo = databaseConnectionInfoQueryResult.rows[0];
 
   const databaseServiceStatus = {
-    service_status_updated_at: databaseServiceStatusUpdatedAt,
+    service_status_updated_at: databaseInfo.database_timestamp,
     service_name: "database",
 
     database_management_system: databaseInfo.dbms_name,
