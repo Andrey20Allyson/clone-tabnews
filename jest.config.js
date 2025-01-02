@@ -15,6 +15,7 @@ const jestConfig = createJestConfig({
   moduleDirectories: ["node_modules", "<rootDir>"],
   maxConcurrency: 1,
   maxWorkers: 1,
+  testTimeout: parseInt(process.env.TEST_TIMEOUT),
 });
 
 module.exports = jestConfig;
