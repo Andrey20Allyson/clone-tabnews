@@ -7,11 +7,11 @@ jobs:
     name: Jest Ubuntu (integration)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@4
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "lts/hydrogen"
+          node-version-file: ".nvmrc"
 
       - run: npm ci
 
