@@ -26,22 +26,11 @@ export default async function migrations(request, response) {
     };
 
     if (request.method === "GET") {
-      const pendingMigrations = await migrationRunner(defaultMigrationOptions);
-
-      return response.status(200).json(pendingMigrations);
+      return await handleGet(request, response, defaultMigrationOptions);
     }
 
     if (request.method === "POST") {
-      const migratedMigrations = await migrationRunner({
-        ...defaultMigrationOptions,
-        dryRun: false,
-      });
-
-      if (migratedMigrations.length > 0) {
-        return response.status(201).json(migratedMigrations);
-      }
-
-      return response.status(200).json(migratedMigrations);
+      return await handlePost(request, response, defaultMigrationOptions);
     }
   } catch (error) {
     console.error(error);
@@ -49,4 +38,23 @@ export default async function migrations(request, response) {
   } finally {
     dbClient?.end();
   }
+}
+
+async function handleGet(request, response, defaultMigrationOptions) {
+  const pendingMigrations = await migrationRunner(defaultMigrationOptions);
+
+  return response.status(200).json(pendingMigrations);
+}
+
+async function handlePost(request, response, defaultMigrationOptions) {
+  const migratedMigrations = await migrationRunner({
+    ...defaultMigrationOptions,
+    dryRun: false,
+  });
+
+  if (migratedMigrations.length > 0) {
+    return response.status(201).json(migratedMigrations);
+  }
+
+  return response.status(200).json(migratedMigrations);
 }
