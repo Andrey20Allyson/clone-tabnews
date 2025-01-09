@@ -1,0 +1,6 @@
+services:
+  secret-detector:
+    image: zricethezav/gitleaks:v8.22.1
+    command: protect --source="/path" --staged --verbose
+    volumes:
+      - ${PWD}:/path
