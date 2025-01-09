@@ -18,7 +18,7 @@ async function fetchStatusPage() {
 
   if (response.status !== 200) {
     return Promise.reject(
-      new Error("GET /api/v1/status don't is returning 200")
+      new Error("GET /api/v1/status don't is returning 200"),
     );
   }
 }

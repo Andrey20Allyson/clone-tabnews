@@ -6,7 +6,7 @@ function toBeDateISOString(actual) {
     return {
       message: () =>
         `Expected ${this.utils.printReceived(
-          actual
+          actual,
         )} to follows the format ${formatedExpected}`,
       pass: false,
     };
@@ -15,7 +15,7 @@ function toBeDateISOString(actual) {
   return {
     message: () =>
       `Expected ${this.utils.printReceived(
-        actual
+        actual,
       )} not to follows the format ${formatedExpected}`,
     pass: true,
   };

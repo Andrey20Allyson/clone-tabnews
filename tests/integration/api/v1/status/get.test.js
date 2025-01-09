@@ -17,7 +17,7 @@ test("GET to /api/v1/status should return the API Status", async () => {
 
   // database service status assertions
   const databaseService = apiStatus.services.find(
-    (service) => service.service_name === "database"
+    (service) => service.service_name === "database",
   );
 
   expect(databaseService).toBeDefined();

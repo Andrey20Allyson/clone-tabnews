@@ -36,7 +36,7 @@ function handleResult(error, stdout) {
   if (stdout.search("accepting connections") === -1) {
     process.stdout.clearLine(0);
     console.log(
-      `> ${progress.next()} ${yellow}Don't is accepting connections yet${cleanup} [ ${yellow}${getDutationTime()}${cleanup} ]`
+      `> ${progress.next()} ${yellow}Don't is accepting connections yet${cleanup} [ ${yellow}${getDutationTime()}${cleanup} ]`,
     );
     process.stdout.moveCursor(0, -1);
 
@@ -45,7 +45,7 @@ function handleResult(error, stdout) {
 
   process.stdout.clearLine(0);
   console.log(
-    `> Postgres server is ${green}UP${cleanup} [${green}${getDutationTime()}${cleanup}]`
+    `> Postgres server is ${green}UP${cleanup} [${green}${getDutationTime()}${cleanup}]`,
   );
 }
 

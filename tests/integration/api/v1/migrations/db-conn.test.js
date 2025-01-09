@@ -21,7 +21,7 @@ test("Any Method for /api/v1/migrations should close db connection", async () =>
     const statusBody = await statusResponse.json();
 
     const databaseService = statusBody.services.find(
-      (service) => service.service_name === "database"
+      (service) => service.service_name === "database",
     );
 
     expect(databaseService).toBeDefined();
