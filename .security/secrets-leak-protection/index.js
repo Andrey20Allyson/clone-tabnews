@@ -9,40 +9,19 @@ const DOCKER_OPTIONS = "-v $PWD:/path";
 const COMMAND = 'protect --source="/path" --staged --verbose';
 
 function main() {
-  if (!hasImage()) {
-    pullImage();
-  }
+  console.log("> Looking for staged secrets...");
 
-  const [output, foundSecret] = runProtect();
+  const [output, hasSecret] = runProtect();
 
-  if (foundSecret) {
-    console.log("> Failed on secrets leak detection");
+  if (hasSecret) {
     process.stdout.write(output);
+    console.log("> Secrets detected on staging");
     process.exit(1);
   }
 
-  console.log("No Secrets Detected");
-}
-
-function hasImage() {
-  const result = run("docker images --format json");
-
-  return result.stdout
-    .toString("utf8")
-    .split("\n")
-    .filter((str) => str.length > 0)
-    .map(JSON.parse)
-    .some((image) => image.Repository === REPOSITORY && image.Tag === TAG);
-}
-
-function pullImage() {
-  const result = run(`docker pull ${REPOSITORY}:${TAG}`);
-
-  if (result.status !== 0) {
-    throw new Error(result.stderr.toString("utf8"));
-  }
-
-  process.stdout.write(result.stdout);
+  process.stdout.cursorTo(0, 0);
+  process.stdout.clearScreenDown();
+  process.exit(0);
 }
 
 function runProtect() {
@@ -50,9 +29,9 @@ function runProtect() {
     `docker run --rm ${DOCKER_OPTIONS} ${REPOSITORY}:${TAG} ${COMMAND}`
   );
 
-  const foundSecret = result.status !== 0;
+  const hasSecret = result.status !== 0;
 
-  return [result.stdout.toString("utf8"), foundSecret];
+  return [result.stdout?.toString("utf8"), hasSecret];
 }
 
 function logSpawnResult(result) {
