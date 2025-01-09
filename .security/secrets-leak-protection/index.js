@@ -19,7 +19,8 @@ function main() {
     process.exit(1);
   }
 
-  process.stdout.cursorTo(0, 0);
+  process.stdout.moveCursor(0, -1);
+  process.stdout.cursorTo(0);
   process.stdout.clearScreenDown();
   process.exit(0);
 }
