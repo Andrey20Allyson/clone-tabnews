@@ -1,1 +1,1 @@
-docker run --rm -v $PWD:/path zricethezav/gitleaks:v8.22.1 protect --source="/path" --staged --verbose
+node .security/secrets-leak-protection
