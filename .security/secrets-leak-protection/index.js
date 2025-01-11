@@ -24,7 +24,7 @@ function main() {
 
 function runProtect() {
   const result = run(
-    `docker run --rm ${DOCKER_OPTIONS} ${REPOSITORY}:${TAG} ${COMMAND}`
+    `docker run --rm ${DOCKER_OPTIONS} ${REPOSITORY}:${TAG} ${COMMAND}`,
   );
 
   const hasSecret = result.status !== 0;

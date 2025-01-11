@@ -1,4 +1,5 @@
 import retry from "async-retry";
+import database from "infra/database";
 
 async function waitForAllServices() {
   await waitForWebServer();
@@ -18,13 +19,18 @@ async function fetchStatusPage() {
 
   if (response.status !== 200) {
     return Promise.reject(
-      new Error("GET /api/v1/status don't is returning 200")
+      new Error("GET /api/v1/status don't is returning 200"),
     );
   }
 }
 
+async function clearDatabase() {
+  await database.query("DROP SCHEMA public CASCADE; CREATE SCHEMA public");
+}
+
 const orchestrator = {
   waitForAllServices,
+  clearDatabase,
 };
 
 export default orchestrator;

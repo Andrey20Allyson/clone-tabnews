@@ -6,7 +6,7 @@ function toBeArray(actual) {
     return {
       message: () =>
         `Expected ${this.utils.printReceived(
-          actual
+          actual,
         )} to be a ${formatedExpected}`,
       pass: false,
     };
@@ -15,7 +15,7 @@ function toBeArray(actual) {
   return {
     message: () =>
       `Expected ${this.utils.printReceived(
-        actual
+        actual,
       )} not to be a ${formatedExpected}`,
     pass: true,
   };

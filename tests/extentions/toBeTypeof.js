@@ -5,7 +5,7 @@ function toBeTypeof(actual, typeName) {
     return {
       message: () =>
         `Expected type of ${this.utils.printReceived(
-          actual
+          actual,
         )} to be ${this.utils.printExpected(typeName)}`,
       pass: false,
     };
@@ -14,7 +14,7 @@ function toBeTypeof(actual, typeName) {
   return {
     message: () =>
       `Expected type of ${this.utils.printReceived(
-        actual
+        actual,
       )} not to be ${this.utils.printExpected(typeName)}`,
     pass: true,
   };
@@ -28,7 +28,7 @@ function toBeInt(actual) {
     return {
       message: () =>
         `Expected type of ${this.utils.printReceived(
-          actual
+          actual,
         )} to be a ${formatedExpected}`,
       pass: false,
     };
@@ -37,7 +37,7 @@ function toBeInt(actual) {
   return {
     message: () =>
       `Expected type of ${this.utils.printReceived(
-        actual
+        actual,
       )} not to be a ${formatedExpected}`,
     pass: true,
   };
