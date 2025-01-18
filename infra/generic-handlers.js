@@ -16,3 +16,8 @@ export function onErrorHandler(error, request, response) {
   console.error(publicErrorObject);
   response.status(500).json(publicErrorObject.toJson());
 }
+
+export const defaultHandlerOptions = {
+  onNoMatch: onNoMatchHandler,
+  onError: onErrorHandler,
+};

@@ -1,6 +1,6 @@
-import { createRouter } from "next-connect";
-import { onErrorHandler, onNoMatchHandler } from "infra/generic-handlers";
+import { defaultHandlerOptions } from "infra/generic-handlers";
 import migrationRunner from "infra/migration-runner";
+import { createRouter } from "next-connect";
 
 const router = createRouter();
 
@@ -8,10 +8,7 @@ router.get(getHandler);
 
 router.post(postHandler);
 
-export default router.handler({
-  onNoMatch: onNoMatchHandler,
-  onError: onErrorHandler,
-});
+export default router.handler(defaultHandlerOptions);
 
 async function getHandler(request, response) {
   const pendingMigrations = await migrationRunner.excecuteMigrations({
