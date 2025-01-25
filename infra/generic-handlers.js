@@ -10,11 +10,14 @@ export function onNoMatchHandler(request, response) {
 
 export function onErrorHandler(error, request, response) {
   const publicErrorObject = new InternalServerError({
+    statusCode: error.statusCode,
     cause: error,
   });
 
   console.error(publicErrorObject);
-  response.status(500).json(publicErrorObject.toJson());
+  response
+    .status(publicErrorObject.statusCode)
+    .json(publicErrorObject.toJson());
 }
 
 export const defaultHandlerOptions = {
