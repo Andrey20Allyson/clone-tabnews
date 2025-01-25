@@ -1,54 +1,25 @@
-import migrationRunner from "node-pg-migrate";
-import path from "node:path";
-import database from "infra/database";
+import { defaultHandlerOptions } from "infra/generic-handlers";
+import migrationRunner from "infra/migration-runner";
+import { createRouter } from "next-connect";
 
-export default async function migrations(request, response) {
-  const allowedMethods = ["GET", "POST"];
-  if (!allowedMethods.includes(request.method)) {
-    return response.status(405).json({
-      error: `Method ${request.method} not allowed`,
-      actions: [`Use allowed method as ${allowedMethods.join(", ")}`],
-    });
-  }
+const router = createRouter();
 
-  let dbClient;
+router.get(getHandler);
 
-  try {
-    dbClient = await database.getConnectedClient();
+router.post(postHandler);
 
-    const defaultMigrationOptions = {
-      dbClient: dbClient,
-      dryRun: true,
-      dir: path.resolve("infra", "migrations"),
-      verbose: true,
-      migrationsTable: "pgmigrations",
-      direction: "up",
-    };
+export default router.handler(defaultHandlerOptions);
 
-    if (request.method === "GET") {
-      return await handleGet(request, response, defaultMigrationOptions);
-    }
-
-    if (request.method === "POST") {
-      return await handlePost(request, response, defaultMigrationOptions);
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  } finally {
-    dbClient?.end();
-  }
-}
-
-async function handleGet(request, response, defaultMigrationOptions) {
-  const pendingMigrations = await migrationRunner(defaultMigrationOptions);
+async function getHandler(request, response) {
+  const pendingMigrations = await migrationRunner.excecuteMigrations({
+    dryRun: true,
+  });
 
   return response.status(200).json(pendingMigrations);
 }
 
-async function handlePost(request, response, defaultMigrationOptions) {
-  const migratedMigrations = await migrationRunner({
-    ...defaultMigrationOptions,
+async function postHandler(request, response) {
+  const migratedMigrations = await migrationRunner.excecuteMigrations({
     dryRun: false,
   });
 
