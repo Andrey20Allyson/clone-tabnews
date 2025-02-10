@@ -1,5 +1,5 @@
 import { defaultHandlerOptions } from "infra/generic-handlers";
-import migrationRunner from "infra/migration-runner";
+import migrator from "models/migrator";
 import { createRouter } from "next-connect";
 
 const router = createRouter();
@@ -11,17 +11,13 @@ router.post(postHandler);
 export default router.handler(defaultHandlerOptions);
 
 async function getHandler(request, response) {
-  const pendingMigrations = await migrationRunner.excecuteMigrations({
-    dryRun: true,
-  });
+  const pendingMigrations = await migrator.listPendingMigrations();
 
   return response.status(200).json(pendingMigrations);
 }
 
 async function postHandler(request, response) {
-  const migratedMigrations = await migrationRunner.excecuteMigrations({
-    dryRun: false,
-  });
+  const migratedMigrations = await migrator.runPendingMigrations();
 
   if (migratedMigrations.length > 0) {
     return response.status(201).json(migratedMigrations);
