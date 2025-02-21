@@ -4,7 +4,7 @@ import path from "node:path";
 
 const defaultMigratorConfig = {
   dir: path.resolve("infra", "migrations"),
-  verbose: true,
+  log: () => {},
   migrationsTable: "pgmigrations",
   direction: "up",
 };
