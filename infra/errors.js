@@ -47,7 +47,7 @@ export class ValidationError extends Error {
     });
 
     this.name = "ValidationError";
-    this.action = action;
+    this.action = action ?? "Ajuste os dados enviados e tente novamente.";
     this.statusCode = 400;
   }
 
