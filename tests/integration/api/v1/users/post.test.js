@@ -2,7 +2,7 @@ import orchestrator from "tests/orchestrator";
 import { version as uuidVersion } from "uuid";
 
 beforeEach(async () => {
-  await orchestrator.clearDatabase();
+  await orchestrator.waitForAllServices(), await orchestrator.clearDatabase();
   await orchestrator.runPendingMigrations();
 });
 
