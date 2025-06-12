@@ -1,17 +1,17 @@
 import bcryptjs from "bcryptjs";
 
-async function hash(password) {
-  const rounds = getRoundsForEnv();
+async function hash(password, nonProductionExternRounds = null) {
+  const rounds = getRoundsForEnv(nonProductionExternRounds);
 
   return await bcryptjs.hash(password, rounds);
 }
 
-function getRoundsForEnv() {
+function getRoundsForEnv(nonProductionExternRounds) {
   if (process.env.NODE_ENV === "production") {
     return 14;
   }
 
-  return 1;
+  return nonProductionExternRounds ?? 1;
 }
 
 async function compare(passwordInText, hash) {
