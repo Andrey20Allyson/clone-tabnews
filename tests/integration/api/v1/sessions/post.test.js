@@ -101,7 +101,7 @@ describe("POST /api/v1/sessions", () => {
           email: "this_user_dont_exist@email.com",
           password: "incorrect_password",
           // sets a production like hash rounds
-          __testRounds: 14,
+          __enforceProd: true,
         }),
       });
 

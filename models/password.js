@@ -21,6 +21,7 @@ async function compare(passwordInText, hash) {
 const password = {
   hash,
   compare,
+  getRoundsForEnv,
 };
 
 export default password;
