@@ -1,7 +1,7 @@
-import { UnauthorizedError } from "infra/errors";
 import { defaultHandlerOptions } from "infra/generic-handlers.js";
+import authentication from "models/authentication.js";
 import password from "models/password";
-import user from "models/user.js";
+import session from "models/session";
 import { createRouter } from "next-connect";
 
 const router = createRouter();
@@ -13,27 +13,14 @@ export default router.handler(defaultHandlerOptions);
 async function postHandler(request, response) {
   const userInputValues = request.body;
 
-  try {
-    const storedUser = await user.findOneByEmail(userInputValues.email);
+  const authenticatedUser = await authentication.getAuthenticatedUser(
+    userInputValues.email,
+    userInputValues.password,
+  );
 
-    const isPasswordMatched = await password.compare(
-      userInputValues.password,
-      storedUser.password,
-    );
-    if (!isPasswordMatched) {
-      throw new UnauthorizedError({
-        message: "Senha não confere.",
-        action: "Verifique se este dado está correto.",
-      });
-    }
-  } catch (error) {
-    throw new UnauthorizedError({
-      message: "Dados de autorização não conferem.",
-      action: "Verifique se os dados enviados estão corretos.",
-    });
-  }
+  const createdSession = await session.create(authenticatedUser.id);
 
-  return response.status(201).json({});
+  return response.status(201).json(createdSession);
 }
 
 async function delayMaskMiddleware(request, response, next) {
@@ -62,8 +49,6 @@ async function hashDelayMask(requestStartTime, __enforceProd = false) {
   const fakeHashDelay = calcFakeHashDelayMillis(rounds);
   const randomDelay = randomIntInRange(100, 300);
   const millisSinceRequestStart = Date.now() - requestStartTime;
-
-  console.log({ fakeHashDelay, randomDelay, millisSinceRequestStart });
 
   const delay = fakeHashDelay + randomDelay - millisSinceRequestStart;
 
