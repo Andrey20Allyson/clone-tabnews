@@ -1,4 +1,5 @@
 import { defaultHandlerOptions } from "infra/generic-handlers.js";
+import * as cookie from "cookie";
 import authentication from "models/authentication.js";
 import password from "models/password";
 import session from "models/session";
@@ -19,6 +20,14 @@ async function postHandler(request, response) {
   );
 
   const createdSession = await session.create(authenticatedUser.id);
+
+  const setCookie = cookie.serialize("session_id", createdSession.token, {
+    path: "/",
+    maxAge: session.EXPIRATION_IN_MILLIS / 1000,
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+  });
+  response.setHeader("Set-Cookie", setCookie);
 
   return response.status(201).json(createdSession);
 }
